@@ -27,6 +27,7 @@ import (
 var (
 	cfgFile  string
 	address  string
+	scheme  string
 	path     string
 	sockets  int
 	interval int
@@ -58,7 +59,7 @@ func rootCmd(cmd *cobra.Command, args []string) {
 	if versionFlag := getFlagBoolPtr(cmd, "version"); versionFlag != nil {
 		fmt.Println("websocket_benchmark v1.0.1")
 	} else {
-		wsbench.WsBench(address, path, sockets, interval, message, duration, timeout)
+		wsbench.WsBench(scheme, address, path, sockets, interval, message, duration, timeout)
 	}
 }
 
@@ -93,10 +94,11 @@ func init() {
 	// when this action is called directly.
 	RootCmd.Flags().BoolP("version", "v", false, "Prints version info")
 	RootCmd.Flags().StringVarP(&address, "address", "a", "localhost:8080", "Websocket endpoint address")
+	RootCmd.Flags().StringVarP(&scheme, "scheme", "e", "wss", "Websocket scheme")
 	RootCmd.Flags().StringVarP(&path, "path", "p", "/echo", "Websocket endpoint relative path")
 	RootCmd.Flags().IntVarP(&sockets, "sockets", "s", 500, "Number of Sockets to use")
 	RootCmd.Flags().IntVarP(&interval, "interval", "i", 1, "Message sending Interval in seconds")
-	RootCmd.Flags().StringVarP(&message, "message", "m", `{"message":"sample message"}`, "Message to send")
+	RootCmd.Flags().StringVarP(&message, "message", "m", `test`, "Message to send")
 	RootCmd.Flags().IntVarP(&duration, "duration", "d", 60, "Runtime Duration in seconds")
 	RootCmd.Flags().IntVarP(&timeout, "timeout", "t", 15, "Websocket handshake timeout in seconds")
 }

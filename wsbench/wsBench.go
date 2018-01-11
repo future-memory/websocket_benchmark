@@ -12,8 +12,8 @@ import (
 	"time"
 )
 
-func WsBench(address string, path string, sockets int, interval int, message string, duration int, connectionTimeout int) {
-	u := url.URL{Scheme: "ws", Host: address, Path: path}
+func WsBench(scheme string, address string, path string, sockets int, interval int, message string, duration int, connectionTimeout int) {
+	u := url.URL{Scheme: scheme, Host: address, Path: path}
 	log.Printf("connecting to %s", u.String())
 	start := time.Now()
 	counter := 0
