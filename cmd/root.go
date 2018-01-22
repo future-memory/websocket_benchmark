@@ -94,7 +94,7 @@ func init() {
 	// when this action is called directly.
 	RootCmd.Flags().BoolP("version", "v", false, "Prints version info")
 	RootCmd.Flags().StringVarP(&address, "address", "a", "localhost:8080", "Websocket endpoint address")
-	RootCmd.Flags().StringVarP(&scheme, "scheme", "e", "wss", "Websocket scheme")
+	RootCmd.Flags().StringVarP(&scheme, "scheme", "e", "ws", "Websocket scheme")
 	RootCmd.Flags().StringVarP(&path, "path", "p", "/echo", "Websocket endpoint relative path")
 	RootCmd.Flags().IntVarP(&sockets, "sockets", "s", 500, "Number of Sockets to use")
 	RootCmd.Flags().IntVarP(&readonly, "readonly", "r", 0, "readonly or not")
