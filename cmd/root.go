@@ -29,6 +29,7 @@ var (
 	address  string
 	scheme  string
 	path     string
+	readonly  int
 	sockets  int
 	interval int
 	message  string
@@ -59,7 +60,7 @@ func rootCmd(cmd *cobra.Command, args []string) {
 	if versionFlag := getFlagBoolPtr(cmd, "version"); versionFlag != nil {
 		fmt.Println("websocket_benchmark v1.0.1")
 	} else {
-		wsbench.WsBench(scheme, address, path, sockets, interval, message, duration, timeout)
+		wsbench.WsBench(scheme, address, path, sockets, interval, message, duration, timeout, readonly)
 	}
 }
 
@@ -89,7 +90,6 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 	//RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.websocket_benchmark.yaml)")
-
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	RootCmd.Flags().BoolP("version", "v", false, "Prints version info")
@@ -97,6 +97,7 @@ func init() {
 	RootCmd.Flags().StringVarP(&scheme, "scheme", "e", "wss", "Websocket scheme")
 	RootCmd.Flags().StringVarP(&path, "path", "p", "/echo", "Websocket endpoint relative path")
 	RootCmd.Flags().IntVarP(&sockets, "sockets", "s", 500, "Number of Sockets to use")
+	RootCmd.Flags().IntVarP(&readonly, "readonly", "r", 0, "readonly or not")
 	RootCmd.Flags().IntVarP(&interval, "interval", "i", 1, "Message sending Interval in seconds")
 	RootCmd.Flags().StringVarP(&message, "message", "m", `test`, "Message to send")
 	RootCmd.Flags().IntVarP(&duration, "duration", "d", 60, "Runtime Duration in seconds")

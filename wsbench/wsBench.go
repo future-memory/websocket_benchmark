@@ -12,8 +12,9 @@ import (
 	"time"
 )
 
-func WsBench(scheme string, address string, path string, sockets int, interval int, message string, duration int, connectionTimeout int) {
+func WsBench(scheme string, address string, path string, sockets int, interval int, message string, duration int, connectionTimeout int, readonly int) {
 	u := url.URL{Scheme: scheme, Host: address, Path: path}
+	log.Println("%s", message);
 	log.Printf("connecting to %s", u.String())
 	start := time.Now()
 	counter := 0
@@ -46,27 +47,30 @@ func WsBench(scheme string, address string, path string, sockets int, interval i
 						break
 					}
 					writeTime := time.Now()
-					err = co.WriteMessage(websocket.TextMessage, []byte(message))
-					if err != nil {
-						log.Println("write:", err)
-						atomic.AddUint64(&writeError, 1)
-					} else {
-						atomic.AddUint64(&writeBytes, uint64(len([]byte(message))))
-						atomic.AddUint64(&writeCounter, 1)
-						_, readMessage, err := co.ReadMessage()
+					if(readonly<1){
+						err = co.WriteMessage(websocket.TextMessage, []byte(message))
 						if err != nil {
-							log.Println("read:", err)
-							readError++
-						} else if string(readMessage) != message {
-							log.Printf("received message is not the same! recv: %s", readMessage)
-							atomic.AddUint64(&compareError, 1)
-							atomic.AddUint64(&readCounter, 1)
-						} else {
-							atomic.AddUint64(&readBytes, uint64(len([]byte(readMessage))))
-							atomic.AddUint64(&readCounter, 1)
-						}
+							log.Println("write:", err)
+							atomic.AddUint64(&writeError, 1)
+						} 
 					}
-					dur := time.Since(writeTime)
+
+					atomic.AddUint64(&writeBytes, uint64(len([]byte(message))))
+					atomic.AddUint64(&writeCounter, 1)
+					_, readMessage, err := co.ReadMessage()
+					if err != nil {
+						log.Println("read:", err)
+						readError++
+					} else if readonly<1 && string(readMessage) != message {
+						log.Printf("received message is not the same! recv: %s | %s", readMessage, message)
+						atomic.AddUint64(&compareError, 1)
+						atomic.AddUint64(&readCounter, 1)
+					} else {
+						atomic.AddUint64(&readBytes, uint64(len([]byte(readMessage))))
+						atomic.AddUint64(&readCounter, 1)
+					}
+
+						dur := time.Since(writeTime)
 					log.Println(dur)
 					durr += dur
 					time.Sleep(time.Duration(interval) * time.Second)
