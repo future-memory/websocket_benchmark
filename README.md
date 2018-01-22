@@ -14,7 +14,7 @@ Usage:
 Flags:
   -a, --address string   Websocket endpoint address (default "localhost:8080")
   -d, --duration int     Runtime Duration in seconds (default 60)
-  -e, --scheme string    string (default ws)
+  -e, --scheme string    Websocket scheme (default ws)
   -h, --help             help for websocket_benchmark
   -i, --interval int     Message sending Interval in seconds (default 1)
   -m, --message string   Message to send (default "{"message":"sample message"}")
