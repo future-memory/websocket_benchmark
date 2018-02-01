@@ -4,6 +4,7 @@ import (
 	_ "fmt"
 	"github.com/gorilla/websocket"
 	"log"
+	"bytes"
 	"net/url"
 	_ "os"
 	_ "os/signal"
@@ -12,7 +13,7 @@ import (
 	"time"
 )
 
-func WsBench(scheme string, address string, path string, sockets int, interval int, message string, duration int, connectionTimeout int, readonly int) {
+func WsBench(scheme string, address string, path string, sockets int, interval int, message string, duration int, connectionTimeout int, readonly int, auth string) {
 	u := url.URL{Scheme: scheme, Host: address, Path: path}
 	log.Println("%s", message);
 	log.Printf("connecting to %s", u.String())
@@ -36,6 +37,11 @@ func WsBench(scheme string, address string, path string, sockets int, interval i
 				HandshakeTimeout: time.Duration(connectionTimeout) * time.Second,
 			}
 			co, _, err := dialer.Dial(u.String(), nil)
+
+			authMsg := []byte(auth);
+			if(bytes.Count(authMsg, nil)>1){
+				co.WriteMessage(websocket.TextMessage, authMsg)
+			}
 
 			if err != nil {
 				log.Println("dial:", err)
@@ -70,7 +76,7 @@ func WsBench(scheme string, address string, path string, sockets int, interval i
 						atomic.AddUint64(&readCounter, 1)
 					}
 
-						dur := time.Since(writeTime)
+					dur := time.Since(writeTime)
 					log.Println(dur)
 					durr += dur
 					time.Sleep(time.Duration(interval) * time.Second)

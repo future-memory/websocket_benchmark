@@ -27,9 +27,10 @@ import (
 var (
 	cfgFile  string
 	address  string
-	scheme  string
+	scheme   string
 	path     string
-	readonly  int
+	auth     string
+	readonly int
 	sockets  int
 	interval int
 	message  string
@@ -60,7 +61,7 @@ func rootCmd(cmd *cobra.Command, args []string) {
 	if versionFlag := getFlagBoolPtr(cmd, "version"); versionFlag != nil {
 		fmt.Println("websocket_benchmark v1.0.1")
 	} else {
-		wsbench.WsBench(scheme, address, path, sockets, interval, message, duration, timeout, readonly)
+		wsbench.WsBench(scheme, address, path, sockets, interval, message, duration, timeout, readonly, auth)
 	}
 }
 
@@ -92,16 +93,17 @@ func init() {
 	//RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.websocket_benchmark.yaml)")
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	RootCmd.Flags().BoolP("version", "v", false, "Prints version info")
 	RootCmd.Flags().StringVarP(&address, "address", "a", "localhost:8080", "Websocket endpoint address")
 	RootCmd.Flags().StringVarP(&scheme, "scheme", "e", "ws", "Websocket scheme")
+	RootCmd.Flags().IntVarP(&interval, "interval", "i", 1, "Message sending Interval in seconds")
 	RootCmd.Flags().StringVarP(&path, "path", "p", "/echo", "Websocket endpoint relative path")
 	RootCmd.Flags().IntVarP(&sockets, "sockets", "s", 500, "Number of Sockets to use")
 	RootCmd.Flags().IntVarP(&readonly, "readonly", "r", 0, "readonly or not")
-	RootCmd.Flags().IntVarP(&interval, "interval", "i", 1, "Message sending Interval in seconds")
 	RootCmd.Flags().StringVarP(&message, "message", "m", `test`, "Message to send")
 	RootCmd.Flags().IntVarP(&duration, "duration", "d", 60, "Runtime Duration in seconds")
 	RootCmd.Flags().IntVarP(&timeout, "timeout", "t", 15, "Websocket handshake timeout in seconds")
+	RootCmd.Flags().StringVarP(&auth, "auth", "u", "", "auth message")
+	RootCmd.Flags().BoolP("version", "v", false, "Prints version info")
 }
 
 // initConfig reads in config file and ENV variables if set.
