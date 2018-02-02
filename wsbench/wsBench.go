@@ -29,6 +29,9 @@ func WsBench(scheme string, address string, path string, sockets int, interval i
 	var readBytes uint64 = 0
 	var durr time.Duration
 	var wg sync.WaitGroup
+
+	authMsg := []byte(auth);
+
 	for {
 		counter++
 		wg.Add(1)
@@ -38,7 +41,6 @@ func WsBench(scheme string, address string, path string, sockets int, interval i
 			}
 			co, _, err := dialer.Dial(u.String(), nil)
 
-			authMsg := []byte(auth);
 			if(bytes.Count(authMsg, nil)>1){
 				co.WriteMessage(websocket.TextMessage, authMsg)
 			}
