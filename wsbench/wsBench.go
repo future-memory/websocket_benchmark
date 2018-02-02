@@ -41,14 +41,15 @@ func WsBench(scheme string, address string, path string, sockets int, interval i
 			}
 			co, _, err := dialer.Dial(u.String(), nil)
 
-			if(bytes.Count(authMsg, nil)>1){
-				co.WriteMessage(websocket.TextMessage, authMsg)
-			}
-
 			if err != nil {
 				log.Println("dial:", err)
 				connectionError++
 			} else {
+
+				if(bytes.Count(authMsg, nil)>1){
+					co.WriteMessage(websocket.TextMessage, authMsg)
+				}
+
 				defer co.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""))
 				for {
 					if time.Since(start) > (time.Duration(duration) * time.Second) {
