@@ -71,6 +71,7 @@ func WsBench(scheme string, address string, path string, sockets int, interval i
 						log.Println("read:", err)
 						readError++
 					} else if readonly<1 && string(readMessage) != message {
+						log.Printf("received message is not the same! recv: %s | %s", readMessage, message)
 						atomic.AddUint64(&compareError, 1)
 						atomic.AddUint64(&readCounter, 1)
 					} else {
