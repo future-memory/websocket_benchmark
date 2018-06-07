@@ -68,10 +68,10 @@ func WsBench(scheme string, address string, path string, sockets int, interval i
 					atomic.AddUint64(&writeCounter, 1)
 					_, readMessage, err := co.ReadMessage()
 					if err != nil {
-						log.Println("read:", err)
+						//log.Println("read:", err)
 						readError++
 					} else if readonly<1 && string(readMessage) != message {
-						log.Printf("received message is not the same! recv: %s | %s", readMessage, message)
+						//log.Printf("received message is not the same! recv: %s | %s", readMessage, message)
 						atomic.AddUint64(&compareError, 1)
 						atomic.AddUint64(&readCounter, 1)
 					} else {
@@ -80,13 +80,14 @@ func WsBench(scheme string, address string, path string, sockets int, interval i
 					}
 
 					dur := time.Since(writeTime)
-					log.Println(dur)
+					//log.Println(dur)
 					durr += dur
 					time.Sleep(time.Duration(interval) * time.Second)
 				}
 			}
 			defer wg.Done()
-		}()
+		}();
+		
 		if counter >= sockets {
 			break
 		}
