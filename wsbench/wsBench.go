@@ -34,7 +34,9 @@ func WsBench(scheme string, address string, path string, sockets int, interval i
 
 	for {
 		counter++
-		wg.Add(1)
+		if(readonly<1){
+			wg.Add(1)
+		}
 		go func() {
 			var dialer = websocket.Dialer{
 				HandshakeTimeout: time.Duration(connectionTimeout) * time.Second,
@@ -86,19 +88,23 @@ func WsBench(scheme string, address string, path string, sockets int, interval i
 					//log.Println(dur)
 					durr += dur
 
-					if(readonly>0){
+					if(readonly<1){
 						time.Sleep(time.Duration(interval) * time.Second);
 					}
 				}
 			}
-			defer wg.Done()
+			if(readonly<1){
+				defer wg.Done();
+			}
 		}();
 
 		if counter >= sockets {
 			break
 		}
 	}
-	wg.Wait()
+	if(readonly<1){
+		wg.Wait()
+	}
 	readCounterF := atomic.LoadUint64(&readCounter)
 	writeCounterF := atomic.LoadUint64(&writeCounter)
 	writeBytesF := atomic.LoadUint64(&writeBytes)
