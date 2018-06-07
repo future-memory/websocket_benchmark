@@ -85,8 +85,8 @@ func WsBench(scheme string, address string, path string, sockets int, interval i
 					dur := time.Since(writeTime)
 					//log.Println(dur)
 					durr += dur
-					
-					if(readonly<1){
+
+					if(readonly>0){
 						time.Sleep(time.Duration(interval) * time.Second);
 					}
 				}
