@@ -67,6 +67,9 @@ func WsBench(scheme string, address string, path string, sockets int, interval i
 					atomic.AddUint64(&writeBytes, uint64(len([]byte(message))))
 					atomic.AddUint64(&writeCounter, 1)
 					_, readMessage, err := co.ReadMessage()
+					
+					log.Printf("readed: %s", readMessage);
+
 					if err != nil {
 						//log.Println("read:", err)
 						readError++
@@ -87,7 +90,7 @@ func WsBench(scheme string, address string, path string, sockets int, interval i
 			}
 			defer wg.Done()
 		}();
-		
+
 		if counter >= sockets {
 			break
 		}
